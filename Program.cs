@@ -14,6 +14,7 @@ var connectionString = $"Host={host};Port={port};Database={dbName};Username={use
 
 // ✅ Register UserRepository with connection string injected
 builder.Services.AddSingleton<UserRepository>(sp => new UserRepository(connectionString));
+Console.WriteLine($"DB connection: {connectionString}");
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
