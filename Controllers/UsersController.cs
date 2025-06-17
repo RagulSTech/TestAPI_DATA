@@ -22,8 +22,11 @@ public class UsersController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<User>>> GetUsers()
     {
-        var users = await _repo.GetAllUsersAsync();
-        return Ok(users);
+        //var users = await _repo.GetAllUsersAsync();
+        //return Ok(users);
+        return Ok(new List<User> {
+        new User { Id = 1, Name = "Test", Email = "test@example.com" }
+        });
     }
 
     [HttpPost]
