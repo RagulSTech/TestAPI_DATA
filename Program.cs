@@ -37,8 +37,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 
-// ✅ Root health check
-app.MapGet("/", () => "🚀 API is running");
 
 app.MapControllers();
 app.Run();
