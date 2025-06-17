@@ -28,13 +28,16 @@ builder.WebHost.ConfigureKestrel(options =>
 
 var app = builder.Build();
 
+// ✅ Swagger only in development
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    // ✅ HTTPS redirection only in development to prevent Render error
+    app.UseHttpsRedirection();
 }
 
-app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapGet("/", () => "🚀 API is running");
 
