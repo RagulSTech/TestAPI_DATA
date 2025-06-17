@@ -36,3 +36,7 @@ C:\Users\80128\source\repos\MyApi\MyApi\obj\Debug\net8.0\refint\MyApi.dll
 C:\Users\80128\source\repos\MyApi\MyApi\obj\Debug\net8.0\MyApi.pdb
 C:\Users\80128\source\repos\MyApi\MyApi\obj\Debug\net8.0\MyApi.genruntimeconfig.cache
 C:\Users\80128\source\repos\MyApi\MyApi\obj\Debug\net8.0\ref\MyApi.dll
+C:\Users\80128\source\repos\MyApi\MyApi\obj\Debug\net8.0\MyApi.sourcelink.json
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Debug\net8.0\Npgsql.dll

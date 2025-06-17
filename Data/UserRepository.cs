@@ -1,7 +1,6 @@
 ﻿using MyApi.Models;
+using Npgsql;
 using System.Data;
-using System.Data.SqlClient;
-
 
 namespace MyApi.Data
 {
@@ -18,19 +17,19 @@ namespace MyApi.Data
         {
             var users = new List<User>();
 
-            using SqlConnection conn = new SqlConnection(_connectionString);
+            using var conn = new NpgsqlConnection(_connectionString);
             conn.Open();
 
-            SqlCommand cmd = new SqlCommand("SELECT Id, Name, Email FROM Users", conn);
-            SqlDataReader reader = cmd.ExecuteReader();
+            using var cmd = new NpgsqlCommand("SELECT Id, Name, Email FROM Users", conn);
+            using var reader = cmd.ExecuteReader();
 
             while (reader.Read())
             {
                 users.Add(new User
                 {
-                    Id = Convert.ToInt32(reader["Id"]),
-                    Name = reader["Name"].ToString(),
-                    Email = reader["Email"].ToString()
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    Name = reader.GetString(reader.GetOrdinal("Name")),
+                    Email = reader.GetString(reader.GetOrdinal("Email"))
                 });
             }
 
@@ -39,10 +38,10 @@ namespace MyApi.Data
 
         public void AddUser(User user)
         {
-            using SqlConnection conn = new SqlConnection(_connectionString);
+            using var conn = new NpgsqlConnection(_connectionString);
             conn.Open();
 
-            SqlCommand cmd = new SqlCommand(
+            using var cmd = new NpgsqlCommand(
                 "INSERT INTO Users (Name, Email) VALUES (@Name, @Email)", conn);
 
             cmd.Parameters.AddWithValue("@Name", user.Name);
@@ -52,4 +51,3 @@ namespace MyApi.Data
         }
     }
 }
-

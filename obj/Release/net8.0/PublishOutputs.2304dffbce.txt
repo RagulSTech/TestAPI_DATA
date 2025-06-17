@@ -1,0 +1,17 @@
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Release\net8.0\publish\MyApi.exe
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Release\net8.0\publish\appsettings.Development.json
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Release\net8.0\publish\appsettings.json
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Release\net8.0\publish\MyApi.dll
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Release\net8.0\publish\MyApi.deps.json
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Release\net8.0\publish\MyApi.runtimeconfig.json
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Release\net8.0\publish\MyApi.pdb
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Release\net8.0\publish\Microsoft.OpenApi.dll
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Release\net8.0\publish\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Release\net8.0\publish\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Release\net8.0\publish\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Release\net8.0\publish\System.Data.SqlClient.dll
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Release\net8.0\publish\runtimes\win-arm64\native\sni.dll
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Release\net8.0\publish\runtimes\win-x64\native\sni.dll
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Release\net8.0\publish\runtimes\win-x86\native\sni.dll
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Release\net8.0\publish\runtimes\unix\lib\net8.0\System.Data.SqlClient.dll
+C:\Users\80128\source\repos\MyApi\MyApi\bin\Release\net8.0\publish\runtimes\win\lib\net8.0\System.Data.SqlClient.dll
