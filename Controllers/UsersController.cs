@@ -3,39 +3,46 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyApi.Models;
 using MyApi.Data;
+using Npgsql;
+using MyApi.Models;
 
-
-[Route("api/[controller]")]
-[ApiController]
-public class UsersController : ControllerBase
+public class UserRepository
 {
-    private readonly UserRepository _repo;
+    private readonly string _connectionString;
 
-    public UsersController(UserRepository repo)
+    public UserRepository(string connectionString)
     {
-        _repo = repo;
+        _connectionString = connectionString;
     }
 
-    [HttpGet("get")]
-    public IActionResult MyGet() => Ok("Hello");
-
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+    public async Task<IEnumerable<User>> GetAllUsersAsync()
     {
-        //var users = await _repo.GetAllUsersAsync();
-        //return Ok(users);
-        return Ok(new List<User> {
-        new User { Id = 1, Name = "Test", Email = "test@example.com" }
-        });
+        var users = new List<User>();
+        using var conn = new NpgsqlConnection(_connectionString);
+        await conn.OpenAsync();
+        var cmd = new NpgsqlCommand("SELECT id, name, email FROM users", conn);
+        var reader = await cmd.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            users.Add(new User
+            {
+                Id = reader.GetInt32(0),
+                Name = reader.GetString(1),
+                Email = reader.GetString(2)
+            });
+        }
+        return users;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> AddUser(User user)
+    public async Task<int> AddUserAsync(User user)
     {
-        if (user == null)
-            return BadRequest("User data is required.");
-
-        var id = await _repo.AddUserAsync(user);
-        return Ok(new { message = "User added successfully.", userId = id });
+        using var conn = new NpgsqlConnection(_connectionString);
+        await conn.OpenAsync();
+        var cmd = new NpgsqlCommand("INSERT INTO users (name, email) VALUES (@name, @email) RETURNING id", conn);
+        cmd.Parameters.AddWithValue("name", user.Name);
+        cmd.Parameters.AddWithValue("email", user.Email);
+        var id = (int)await cmd.ExecuteScalarAsync();
+        return id;
     }
 }
+
