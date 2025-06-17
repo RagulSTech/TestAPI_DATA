@@ -19,6 +19,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// THIS IS THE IMPORTANT PART:
+var portEnv = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(int.Parse(portEnv));
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
