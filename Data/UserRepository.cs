@@ -52,9 +52,15 @@ namespace MyApi.Data
             cmd.Parameters.AddWithValue("@Name", user.Name);
             cmd.Parameters.AddWithValue("@Email", user.Email);
 
-            var insertedId = (int)await cmd.ExecuteScalarAsync();
-
-            return insertedId;
+            var result = await cmd.ExecuteScalarAsync();
+            if (result is int id)
+            {
+                return id;
+            }
+            else
+            {
+                throw new Exception("Failed to insert user and retrieve ID.");
+            }
         }
     }
 }
