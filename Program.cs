@@ -12,18 +12,14 @@ var password = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? throw new Ex
 
 var connectionString = $"Host={host};Port={port};Database={dbName};Username={user};Password={password}";
 
-// Pass this to your repository
-builder.Services.AddSingleton(new UserRepository(connectionString));
-
-
-// Register UserRepository with connection string injected
+// ✅ Register UserRepository with connection string injected
 builder.Services.AddSingleton<UserRepository>(sp => new UserRepository(connectionString));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// THIS IS THE IMPORTANT PART:
+// ✅ Configure Kestrel to listen on dynamic port (for Render)
 var portEnv = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.ConfigureKestrel(options =>
 {
@@ -40,8 +36,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
+
+// ✅ Root health check
 app.MapGet("/", () => "🚀 API is running");
 
 app.MapControllers();
-
 app.Run();
