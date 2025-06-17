@@ -1,6 +1,7 @@
 ﻿using MyApi.Models;
 using Npgsql;
-using System.Data;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MyApi.Data
 {
@@ -13,18 +14,17 @@ namespace MyApi.Data
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 
-
-        public List<User> GetAllUsers()
+        public async Task<List<User>> GetAllUsersAsync()
         {
             var users = new List<User>();
 
-            using var conn = new NpgsqlConnection(_connectionString);
-            conn.Open();
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
 
-            using var cmd = new NpgsqlCommand("SELECT Id, Name, Email FROM Users", conn);
-            using var reader = cmd.ExecuteReader();
+            await using var cmd = new NpgsqlCommand("SELECT Id, Name, Email FROM Users", conn);
+            await using var reader = await cmd.ExecuteReaderAsync();
 
-            while (reader.Read())
+            while (await reader.ReadAsync())
             {
                 users.Add(new User
                 {
@@ -37,18 +37,24 @@ namespace MyApi.Data
             return users;
         }
 
-        public void AddUser(User user)
+        public async Task<int> AddUserAsync(User user)
         {
-            using var conn = new NpgsqlConnection(_connectionString);
-            conn.Open();
+            if (user == null) throw new ArgumentNullException(nameof(user));
 
-            using var cmd = new NpgsqlCommand(
-                "INSERT INTO Users (Name, Email) VALUES (@Name, @Email)", conn);
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync();
+
+            // Use RETURNING Id to get inserted record's Id
+            var query = "INSERT INTO Users (Name, Email) VALUES (@Name, @Email) RETURNING Id";
+
+            await using var cmd = new NpgsqlCommand(query, conn);
 
             cmd.Parameters.AddWithValue("@Name", user.Name);
             cmd.Parameters.AddWithValue("@Email", user.Email);
 
-            cmd.ExecuteNonQuery();
+            var insertedId = (int)await cmd.ExecuteScalarAsync();
+
+            return insertedId;
         }
     }
 }

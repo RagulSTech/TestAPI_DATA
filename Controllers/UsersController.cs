@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyApi.Data;
 using MyApi.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MyApi.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("/")]
     public class UsersController : ControllerBase
     {
         private readonly UserRepository _repo;
@@ -14,18 +16,24 @@ namespace MyApi.Controllers
         {
             _repo = repo;
         }
+        [HttpGet]
+        public IActionResult Get() => Ok("API is running");
 
         [HttpGet]
-        public ActionResult<IEnumerable<User>> GetUsers()
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return _repo.GetAllUsers();
+            var users = await _repo.GetAllUsersAsync();
+            return Ok(users);
         }
 
         [HttpPost]
-        public IActionResult AddUser(User user)
+        public async Task<IActionResult> AddUser(User user)
         {
-            _repo.AddUser(user);
-            return Ok(new { message = "User added successfully." });
+            if (user == null)
+                return BadRequest("User data is required.");
+
+            var id = await _repo.AddUserAsync(user);
+            return Ok(new { message = "User added successfully.", userId = id });
         }
     }
 }
