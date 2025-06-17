@@ -8,10 +8,11 @@ namespace MyApi.Data
     {
         private readonly string _connectionString;
 
-        public UserRepository(IConfiguration configuration)
+        public UserRepository(string connectionString)
         {
-            _connectionString = configuration.GetConnectionString("NextGenConString");
+            _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
+
 
         public List<User> GetAllUsers()
         {

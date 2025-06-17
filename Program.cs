@@ -1,18 +1,26 @@
+using Microsoft.Extensions.DependencyInjection;
 using MyApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Build connection string from environment variables with null checks
+var host = Environment.GetEnvironmentVariable("DB_HOST") ?? throw new Exception("DB_HOST not set");
+var port = Environment.GetEnvironmentVariable("DB_PORT") ?? throw new Exception("DB_PORT not set");
+var dbName = Environment.GetEnvironmentVariable("DB_NAME") ?? throw new Exception("DB_NAME not set");
+var user = Environment.GetEnvironmentVariable("DB_USER") ?? throw new Exception("DB_USER not set");
+var pass = Environment.GetEnvironmentVariable("DB_PASS") ?? throw new Exception("DB_PASS not set");
 
-builder.Services.AddSingleton<UserRepository>();
+var connectionString = $"Host={host};Port={port};Database={dbName};Username={user};Password={pass};SSL Mode=Require;Trust Server Certificate=true";
+
+// Register UserRepository with connection string injected
+builder.Services.AddSingleton<UserRepository>(sp => new UserRepository(connectionString));
+
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -20,9 +28,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
