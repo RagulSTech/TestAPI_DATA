@@ -1,26 +1,39 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using MyApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Build connection string from environment variables with null checks
-var host = Environment.GetEnvironmentVariable("DB_HOST") ?? throw new Exception("DB_HOST not set");
+// ✅ Try to build connection string from environment variables first
+var host = Environment.GetEnvironmentVariable("DB_HOST");
 var port = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
-var dbName = Environment.GetEnvironmentVariable("DB_NAME") ?? throw new Exception("DB_NAME not set");
-var user = Environment.GetEnvironmentVariable("DB_USER") ?? throw new Exception("DB_USER not set");
-var password = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? throw new Exception("DB_PASSWORD not set");
+var dbName = Environment.GetEnvironmentVariable("DB_NAME");
+var user = Environment.GetEnvironmentVariable("DB_USER");
+var password = Environment.GetEnvironmentVariable("DB_PASSWORD");
 
-var connectionString = $"Host={host};Port={port};Database={dbName};Username={user};Password={password}";
+string? connectionString = null;
 
-// ✅ Register UserRepository with connection string injected
+// ✅ If all required env vars are present, build from them
+if (!string.IsNullOrEmpty(host) && !string.IsNullOrEmpty(dbName) && !string.IsNullOrEmpty(user) && !string.IsNullOrEmpty(password))
+{
+    connectionString = $"Host={host};Port={port};Database={dbName};Username={user};Password={password}";
+}
+else
+{
+    // ✅ Fallback to appsettings.json
+    connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+        ?? throw new Exception("Connection string not found in appsettings.json or environment variables.");
+}
+
+Console.WriteLine($"✅ DB connection: {connectionString}");
+
+// ✅ Register repository
 builder.Services.AddSingleton<UserRepository>(sp => new UserRepository(connectionString));
-Console.WriteLine($"DB connection: {connectionString}");
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// ✅ Configure Kestrel to listen on dynamic port (for Render)
+// ✅ Configure Kestrel to listen on the correct port for Render
 var portEnv = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.ConfigureKestrel(options =>
 {
@@ -34,13 +47,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-
-    // ✅ HTTPS redirection only in development to prevent Render error
     app.UseHttpsRedirection();
 }
 
 app.UseAuthorization();
 app.MapGet("/", () => "🚀 API is running");
-
 app.MapControllers();
 app.Run();
