@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using MyApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,9 +25,8 @@ else
 
 Console.WriteLine($"✅ DB connection: {connectionString}");
 
-// ✅ Register repository
-builder.Services.AddSingleton<UserRepository>(sp => new UserRepository(connectionString));
-
+// ✅ Register configuration to access connection string in controllers
+builder.Services.AddSingleton(connectionString); // Add as a singleton string
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
