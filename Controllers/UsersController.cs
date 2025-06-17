@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace MyApi.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("/")]
     public class UsersController : ControllerBase
     {
         private readonly UserRepository _repo;
@@ -16,8 +16,8 @@ namespace MyApi.Controllers
         {
             _repo = repo;
         }
-        [HttpGet]
-        public IActionResult Get() => Ok("API is running");
+        [HttpGet("get")]
+        public IActionResult MyGet() => Ok("Hello");
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
