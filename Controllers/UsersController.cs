@@ -1,3 +1,10 @@
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using MyApi.Models;
+using MyApi.Data;
+
+
 [Route("api/[controller]")]
 [ApiController]
 public class UsersController : ControllerBase
