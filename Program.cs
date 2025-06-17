@@ -5,12 +5,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Build connection string from environment variables with null checks
 var host = Environment.GetEnvironmentVariable("DB_HOST") ?? throw new Exception("DB_HOST not set");
-var port = Environment.GetEnvironmentVariable("DB_PORT") ?? throw new Exception("DB_PORT not set");
+var port = Environment.GetEnvironmentVariable("DB_PORT") ?? "5432";
 var dbName = Environment.GetEnvironmentVariable("DB_NAME") ?? throw new Exception("DB_NAME not set");
 var user = Environment.GetEnvironmentVariable("DB_USER") ?? throw new Exception("DB_USER not set");
-var pass = Environment.GetEnvironmentVariable("DB_PASS") ?? throw new Exception("DB_PASS not set");
+var password = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? throw new Exception("DB_PASSWORD not set");
 
-var connectionString = $"Host={host};Port={port};Database={dbName};Username={user};Password={pass};SSL Mode=Require;Trust Server Certificate=true";
+var connectionString = $"Host={host};Port={port};Database={dbName};Username={user};Password={password}";
+
+// Pass this to your repository
+builder.Services.AddSingleton(new UserRepository(connectionString));
+
 
 // Register UserRepository with connection string injected
 builder.Services.AddSingleton<UserRepository>(sp => new UserRepository(connectionString));
