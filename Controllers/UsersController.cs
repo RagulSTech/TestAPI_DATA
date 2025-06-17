@@ -3,11 +3,10 @@ using Microsoft.Extensions.Configuration;
 using MyApi.Models;
 using Npgsql;
 using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api")]
 public class UsersController : ControllerBase
 {
     private readonly string _connectionString;
@@ -18,7 +17,7 @@ public class UsersController : ControllerBase
             ?? throw new Exception("❌ Connection string 'DefaultConnection' not found.");
     }
 
-    [HttpGet]
+    [HttpGet("GetUsers")]
     public async Task<IActionResult> GetUsers()
     {
         try
@@ -49,7 +48,7 @@ public class UsersController : ControllerBase
         }
     }
 
-    [HttpPost]
+    [HttpPost("AddUser")]
     public async Task<IActionResult> AddUser([FromBody] User user)
     {
         try
