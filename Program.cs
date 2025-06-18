@@ -48,7 +48,7 @@ builder.WebHost.ConfigureKestrel(options =>
 });
 
 var app = builder.Build();
-
+app.UseCors("AllowAll");
 // ✅ Swagger only in development
 if (app.Environment.IsDevelopment())
 {
